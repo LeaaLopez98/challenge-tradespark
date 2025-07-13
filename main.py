@@ -1,13 +1,14 @@
 import backtrader as bt
 import datetime
 from price_crossover import PriceCrossover
+from golden_cross import GoldenCross
 
 cerebro = bt.Cerebro()
 
 data = bt.feeds.YahooFinanceCSVData(
   dataname='datafeeds/AAPL.csv',
   fromdate=datetime.datetime(2021, 1, 1),
-  todate=datetime.datetime(2021, 4, 30),
+  todate=datetime.datetime(2021, 12, 31),
   reversed=False
 )
 
