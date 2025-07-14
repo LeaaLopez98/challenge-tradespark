@@ -14,25 +14,31 @@ class PriceCrossover(bt.Strategy):
 	)
 
 	def __init__(self):
-		self.sma = btind.SMA(self.data0.close, period=self.params.period)
+		self.sma = { name: btind.SMA(self.getdatabyname(name).close, period=self.params.period) for name in self.getdatanames() }
 
 	def next(self):
 
-		current_price = self.data0.close[0]
+		for name in self.getdatanames():
 
-		if (current_price > self.sma[0] and not self.position):
+			data = self.getdatabyname(name)
+			
+			current_price = data.close[0]
 
-			cash_for_buy = self.broker.get_value() * 0.1
+			position = self.getposition(data)
 
-			current_cash = self.broker.get_cash()
+			if (current_price > self.sma.get(name)[0] and not position):
+				
+				cash_for_buy = self.broker.get_value() * 0.1
 
-			if (current_cash >= cash_for_buy):
-				amount_to_buy = int(cash_for_buy / current_price)
+				current_cash = self.broker.get_cash()
 
-				if (amount_to_buy > 0):
-					self.buy(size=amount_to_buy)
-					self.log('BUY CREATE, %.2f' % current_price)
+				if (current_cash >= cash_for_buy):
+					amount_to_buy = int(cash_for_buy / current_price)
 
-		elif (current_price < self.sma[0] and self.position):
-			self.sell(size=self.position.size)
-			self.log('SELL CREATE, %.2f' % current_price)
+					if (amount_to_buy > 0):
+						self.buy(data=data, size=amount_to_buy)
+						self.log('BUY CREATE FOR %s, PRICE: %.2f, AMOUNT: %.2f' % (name, current_price, amount_to_buy))
+
+			elif (current_price < self.sma.get(name)[0] and position):
+				self.sell(data=data, size=position.size)
+				self.log('SELL CREATE FOR %s, PRICE: %.2f, AMOUNT: %.2f' % (name, current_price, position.size))
