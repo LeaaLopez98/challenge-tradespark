@@ -4,6 +4,14 @@ from strategies.abstract_strategy import AbstractStrategy
 class GoldenCross(AbstractStrategy):
 	
 	def __init__(self):
+
+		"""
+		Inicializa la estrategia creando dos indicadores SMA para cada datafeed:
+		una de corto plazo (periodo 10) y otra de largo plazo (periodo 30).
+
+		Estos indicadores se usan para determinar las señales de compra y venta
+		basadas en el cruce entre las dos SMAs.
+		"""
 		
 		super().__init__()
 
@@ -15,9 +23,27 @@ class GoldenCross(AbstractStrategy):
 			self.long_sma[name] = btind.SMA(self.getdatabyname(name).close, period=30)
 	
 	def condition_for_buy(self, data_name):
+		"""
+		Retorna True si la SMA de corto plazo está por encima de la SMA de largo plazo para el datafeed dado.
+
+		Args:
+			data_name (str): Nombre del datafeed.
+
+		Returns:
+			bool: Indicador de condición de compra.
+		"""
 		return self.short_sma.get(data_name)[0] > self.long_sma.get(data_name)[0]
 	
 	def condition_for_sell(self, data_name):
+		"""
+		Retorna True si la SMA de largo plazo está por encima de la SMA de corto plazo para el datafeed dado.
+
+		Args:
+			data_name (str): Nombre del datafeed.
+
+		Returns:
+			bool: Indicador de condición de venta.
+		"""
 		return self.long_sma.get(data_name)[0] > self.short_sma.get(data_name)[0]
 	
 	def __str__(self):
