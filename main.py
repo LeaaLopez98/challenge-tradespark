@@ -1,7 +1,7 @@
 import backtrader as bt
 import datetime
-from price_crossover import PriceCrossover
-from golden_cross import GoldenCross
+from strategies.price_crossover import PriceCrossover
+from strategies.golden_cross import GoldenCross
 
 cerebro = bt.Cerebro()
 
@@ -18,7 +18,8 @@ for d in datafeeds:
 
 cerebro.broker.setcash(100000)
 
-#cerebro.addstrategy(PriceCrossover)
+cerebro.addstrategy(PriceCrossover, period=10)
+cerebro.addstrategy(PriceCrossover, period=30)
 cerebro.addstrategy(GoldenCross)
 
 print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())

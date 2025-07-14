@@ -3,13 +3,10 @@ from strategies.abstract_strategy import AbstractStrategy
 
 class GoldenCross(AbstractStrategy):
 	
-	def log(self, txt, dt=None):
-		''' Logging function for this strategy'''
-		dt = dt or self.datas[0].datetime.date(0)
-		print('%s, %s' % (dt.isoformat(), txt))
-
 	def __init__(self):
 		
+		super().__init__()
+
 		self.short_sma = {}
 		self.long_sma = {}
 
@@ -22,3 +19,6 @@ class GoldenCross(AbstractStrategy):
 	
 	def condition_for_sell(self, data_name):
 		return self.long_sma.get(data_name)[0] > self.short_sma.get(data_name)[0]
+	
+	def __str__(self):
+		return 'GoldenCross Strategy'
