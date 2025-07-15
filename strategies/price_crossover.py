@@ -43,4 +43,4 @@ class PriceCrossover(AbstractStrategy):
 		return self.getdatabyname(data_name).close[0] < self.sma.get(data_name)[0]
 	
 	def __str__(self):
-		return f'PriceCrossover, period={self.params.period}'
+		return f'PriceCrossover({self.params.period})'

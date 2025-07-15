@@ -1,11 +1,15 @@
 import backtrader as bt
+from utils.logger import Logger
 
 class AbstractStrategy(bt.Strategy):
 	
-	def log(self, txt, dt=None):
+	def log(self, action, status, ticker, price, size, dt=None):
 		''' Logging function for this strategy'''
 		dt = dt or self.datas[0].datetime.date(0)
-		print('%s, %s' % (dt.isoformat(), txt))
+
+		Logger.write_csv(
+			[dt.isoformat(), str(self), action, status, ticker, f'{price:.2f}', int(size), f'{self.broker.get_value():.2f}'],
+		)
 
 	def __init__(self):
 		"""
@@ -71,7 +75,7 @@ class AbstractStrategy(bt.Strategy):
 	def notify_order(self, order):
 
 		"""
-		Notifica el estado de la orden.
+		Notifica si existe un cambio en el estado de la orden.
 
 		Si la orden fue aceptada o enviada, se ignora.
 		Si la orden fue completada, se actualiza la posicion de la estrategia y se imprime un log.
@@ -87,22 +91,22 @@ class AbstractStrategy(bt.Strategy):
 		if order.status in [order.Completed]:
 			if order.isbuy():
 				self.strategy_position[order.data._name] += order.executed.size
-				self.log('STRATEGY %s, BUY EXECUTED FOR %s, PRICE: %.2f, SIZE: %.2f' % (str(self), order.data._name, order.executed.price, order.executed.size))
+				self.log('BUY', 'EXECUTED', order.data._name, order.executed.price, order.executed.size)
 			elif order.issell():
 				self.strategy_position[order.data._name] = 0
-				self.log('STRATEGY %s, SELL EXECUTED FOR %s, PRICE: %.2f, SIZE: %.2f' % (str(self), order.data._name, order.executed.price, order.executed.size))
+				self.log('SELL', 'EXECUTED', order.data._name, order.executed.price, order.executed.size)
 
 		if (order.status in [order.Canceled, order.Margin, order.Rejected]):
-			self.log('Order Canceled/Margin/Rejected')
+			action = 'BUY' if order.isbuy() else 'SELL'
+			self.log(action, "FAILED", order.data._name, 0, 0)
 
 	def next(self):
 		"""
-		Ejecuta la lógica de compra/venta para cada activo en cada paso.
+		Ejecuta la logica de compra/venta para cada activo en cada paso.
 
-		Verifica condiciones de compra y venta, gestiona posiciones y crea órdenes.
+		Verifica condiciones de compra y venta, gestiona posiciones y crea ordenes.
 		"""
-
-		# Itera por todos los datafeeds
+		# Itera sobre cada uno de los datafeeds
 		for name in self.getdatanames():
 
 			data = self.getdatabyname(name)
@@ -118,9 +122,9 @@ class AbstractStrategy(bt.Strategy):
 
 				if (size > 0):
 					self.buy(data=data, size=size)
-					self.log('STRATEGY %s, BUY CREATE FOR %s, PRICE: %.2f, SIZE: %.2f' % (str(self), name, current_price, size))
+					self.log('BUY', 'CREATE', name, current_price, size)
 
 			# Verifica si la estrategia debe vender
 			elif (self.condition_for_sell(name) and position > 0):
 				self.sell(data=data, size=position)
-				self.log('STRATEGY %s, SELL CREATE FOR %s, PRICE: %.2f, SIZE: %.2f' % (str(self), name, current_price, position))
+				self.log('SELL', 'CREATE', name, current_price, position)

@@ -47,4 +47,4 @@ class GoldenCross(AbstractStrategy):
 		return self.long_sma.get(data_name)[0] > self.short_sma.get(data_name)[0]
 	
 	def __str__(self):
-		return 'GoldenCross Strategy'
+		return 'GoldenCross'

@@ -1,7 +1,10 @@
 import backtrader as bt
 import datetime
+from utils.logger import Logger
 from strategies.price_crossover import PriceCrossover
 from strategies.golden_cross import GoldenCross
+
+Logger.delete_csv()
 
 cerebro = bt.Cerebro()
 
