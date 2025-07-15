@@ -3,7 +3,7 @@ import os
 
 class Logger:
 
-	FILE = 'output.csv'
+	FILE = 'output/logs.csv'
 	header = ['date', 'strategy', 'action', 'status', 'ticker', 'price', 'size', 'portfolio value']
 
 	@staticmethod
@@ -13,6 +13,11 @@ class Logger:
 
 	@staticmethod
 	def write_csv(row):
+
+		dir_path = os.path.dirname(Logger.FILE)
+		if not os.path.exists(dir_path):
+			os.makedirs(dir_path, exist_ok=True)
+			
 		file_exists = os.path.isfile(Logger.FILE)
 		with open(Logger.FILE, 'a', newline='') as file:
 			writer = csv.writer(file)

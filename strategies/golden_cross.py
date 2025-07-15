@@ -2,6 +2,13 @@ import backtrader.indicators as btind
 from strategies.abstract_strategy import AbstractStrategy 
 
 class GoldenCross(AbstractStrategy):
+	"""
+	Estrategia que implementa un Golden Cross.
+
+	Compra cuando la media movil de corto plazo (SMA 10) supera a la de largo plazo (SMA 30),
+	y vende cuando ocurre lo contrario.
+	"""
+
 	
 	def __init__(self):
 
@@ -24,25 +31,21 @@ class GoldenCross(AbstractStrategy):
 	
 	def condition_for_buy(self, data_name):
 		"""
-		Retorna True si la SMA de corto plazo está por encima de la SMA de largo plazo para el datafeed dado.
-
 		Args:
 			data_name (str): Nombre del datafeed.
 
 		Returns:
-			bool: Indicador de condición de compra.
+			bool: True si la SMA de corto plazo esta por encima de la SMA de largo plazo.
 		"""
 		return self.short_sma.get(data_name)[0] > self.long_sma.get(data_name)[0]
 	
 	def condition_for_sell(self, data_name):
 		"""
-		Retorna True si la SMA de largo plazo está por encima de la SMA de corto plazo para el datafeed dado.
-
 		Args:
 			data_name (str): Nombre del datafeed.
 
 		Returns:
-			bool: Indicador de condición de venta.
+			bool: True si la SMA de largo plazo esta por encima de la SMA de corto plazo.
 		"""
 		return self.long_sma.get(data_name)[0] > self.short_sma.get(data_name)[0]
 	

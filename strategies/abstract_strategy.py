@@ -2,14 +2,24 @@ import backtrader as bt
 from utils.logger import Logger
 
 class AbstractStrategy(bt.Strategy):
-	
+
+	"""
+	Clase que define la logica comun que comparten las estrategias, incluyendo
+	el registro de operaciones y evolucion del portfolio en CSV, y el control
+	de posiciones por activo.
+
+	Las clases concretas deben implementar:
+		- condition_for_buy()
+		- condition_for_sell()
+	"""
+
+
 	def log(self, action, status, ticker, price, size, dt=None):
-		''' Logging function for this strategy'''
 		dt = dt or self.datas[0].datetime.date(0)
 
 		Logger.write_csv(
 			[dt.isoformat(), str(self), action, status, ticker, f'{price:.2f}', int(size), f'{self.broker.get_value():.2f}'],
-		)
+	)
 
 	def __init__(self):
 		"""
@@ -45,7 +55,7 @@ class AbstractStrategy(bt.Strategy):
 			data_name (str) - Nombre del datafeed.
 		
 		Returns: 
-			bool: True si la estrategia debe vender.
+			bool: True si la estrategia debe comprar.
 		"""
 		pass
 
@@ -78,8 +88,8 @@ class AbstractStrategy(bt.Strategy):
 		Notifica si existe un cambio en el estado de la orden.
 
 		Si la orden fue aceptada o enviada, se ignora.
-		Si la orden fue completada, se actualiza la posicion de la estrategia y se imprime un log.
-		Si la orden fue rechazada o cancelada, se imprime un log.
+		Si la orden fue completada, se actualiza la posicion de la estrategia y se registra un log.
+		Si la orden fue rechazada o cancelada, se registra un log.
 
 		Args:
 			order (object) - Objeto de la orden.
@@ -102,7 +112,7 @@ class AbstractStrategy(bt.Strategy):
 
 	def next(self):
 		"""
-		Ejecuta la logica de compra/venta para cada activo en cada paso.
+		Ejecuta la logica de compra/venta para cada uno de los activos en cada paso.
 
 		Verifica condiciones de compra y venta, gestiona posiciones y crea ordenes.
 		"""
