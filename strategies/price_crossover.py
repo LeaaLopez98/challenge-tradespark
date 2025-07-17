@@ -30,9 +30,13 @@ class PriceCrossover(AbstractStrategy):
 			data_name (str) - Nombre del datafeed.
 		
 		Returns: 
-			bool: True si el precio esta por encima de la SMA.
+			bool: True si el precio cruza por encima de la SMA.
 		"""
-		return self.getdatabyname(data_name).close[0] > self.sma.get(data_name)[0]
+
+		close = self.getdatabyname(data_name).close
+		sma = self.sma.get(data_name)
+
+		return close[0] > sma[0] and close[-1] < sma[-1]
 
 	def condition_for_sell(self, data_name):
 		"""		
@@ -40,9 +44,13 @@ class PriceCrossover(AbstractStrategy):
 			data_name (str) - Nombre del datafeed.
 		
 		Returns: 
-			bool: True si el precio esta por debajo de la SMA.
+			bool: True si el precio cruza por debajo de la SMA.
 		"""
-		return self.getdatabyname(data_name).close[0] < self.sma.get(data_name)[0]
+
+		close = self.getdatabyname(data_name).close
+		sma = self.sma.get(data_name)
+
+		return close[0] < sma[0] and close[-1] > sma[-1] 
 	
 	def __str__(self):
 		return f'PriceCrossover({self.params.period})'

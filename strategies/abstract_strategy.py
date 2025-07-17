@@ -139,7 +139,7 @@ class AbstractStrategy(bt.Strategy):
 			position = self.strategy_position.get(name)
 
 			# Verifica si la estrategia debe comprar
-			if (self.condition_for_buy(name) and position == 0):
+			if (self.condition_for_buy(name)):
 				
 				size = self.get_size_to_buy(current_price)
 

@@ -33,9 +33,13 @@ class GoldenCross(AbstractStrategy):
 			data_name (str): Nombre del datafeed.
 
 		Returns:
-			bool: True si la SMA de corto plazo esta por encima de la SMA de largo plazo.
+			bool: True si la SMA de corto plazo cruza por encima de la SMA de largo plazo.
 		"""
-		return self.short_sma.get(data_name)[0] > self.long_sma.get(data_name)[0]
+
+		short_sma = self.short_sma.get(data_name)
+		long_sma = self.long_sma.get(data_name)
+
+		return short_sma[0] > long_sma[0] and short_sma[-1] < long_sma[-1]
 	
 	def condition_for_sell(self, data_name):
 		"""
@@ -43,9 +47,13 @@ class GoldenCross(AbstractStrategy):
 			data_name (str): Nombre del datafeed.
 
 		Returns:
-			bool: True si la SMA de largo plazo esta por encima de la SMA de corto plazo.
+			bool: True si la SMA de largo plazo cruza por encima de la SMA de corto plazo.
 		"""
-		return self.long_sma.get(data_name)[0] > self.short_sma.get(data_name)[0]
+
+		short_sma = self.short_sma.get(data_name)
+		long_sma = self.long_sma.get(data_name)
+
+		return long_sma[0] > short_sma[0] and long_sma[-1] < short_sma[-1]
 	
 	def __str__(self):
 		return 'GoldenCross'
