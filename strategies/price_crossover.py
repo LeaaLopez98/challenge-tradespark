@@ -3,12 +3,11 @@ import backtrader.indicators as btind
 
 class PriceCrossover(AbstractStrategy):
 	"""
-	Estrategia de cruce de precio y media movil simple (SMA).
+	Estrategia basada en cruce entre el precio de cierre y una media movil simple (SMA).
 
-	Compra cuando el precio de cierre está por encima de la SMA.
-	Vende cuando el precio de cierre está por debajo de la SMA.
-	El periodo de la SMA es configurable mediante el parametro 'period'.
-	"""	
+	Compra cuando el precio esta por encima de la SMA, y vende cuando cae por debajo.
+	El periodo de la SMA es configurable mediante el parámetro 'period'.
+	"""
 
 	params = (
 		('period', 10),

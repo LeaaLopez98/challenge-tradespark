@@ -2,6 +2,9 @@ import csv
 import os
 
 class Logger:
+	"""
+	Clase que maneja el registro de operaciones y evolucion del portfolio en CSV
+	"""
 
 	FILE = 'output/logs.csv'
 	header = ['date', 'strategy', 'action', 'status', 'ticker', 'price', 'size', 'portfolio value']

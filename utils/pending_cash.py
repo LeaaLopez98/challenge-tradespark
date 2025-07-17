@@ -1,4 +1,8 @@
 class CashReservation:
+	"""
+	Clase para gestionar la reserva de fondos pendientes.
+	"""
+
 	def __init__(self):
 		self.total_amount = 0
 		self.references = {}

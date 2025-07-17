@@ -146,9 +146,8 @@ class AbstractStrategy(bt.Strategy):
 				if (size > 0):
 					order = self.buy(data=data, size=size)
 
-					# Reservo el dinero (funcion techo para tener cierto margen) con esa referencia
+					# Reservo el dinero (funcion techo para tener cierto margen) con su referencia
 					pending_cash.reserve(order.ref, math.ceil(size * current_price))
-		
 					self.log('BUY', 'CREATE', name, current_price, size)
 
 			# Verifica si la estrategia debe vender

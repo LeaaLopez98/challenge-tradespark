@@ -3,13 +3,11 @@ from strategies.abstract_strategy import AbstractStrategy
 
 class GoldenCross(AbstractStrategy):
 	"""
-	Estrategia que implementa un Golden Cross.
+	Implementa una estrategia Golden Cross con medias moviles simples (SMA).
 
-	Compra cuando la media movil de corto plazo (SMA 10) supera a la de largo plazo (SMA 30),
-	y vende cuando ocurre lo contrario.
+	Compra cuando la SMA de 10 cruza por encima de la de 30, y vende cuando ocurre lo contrario.
 	"""
 
-	
 	def __init__(self):
 
 		"""
